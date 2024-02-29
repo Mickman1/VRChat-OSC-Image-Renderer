@@ -17,6 +17,7 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 		// pixels is a 1d array (in rgba order) of decoded pixel data
 		console.log(`RGBA Length: ${pixels.length}`)
 
+		// Dividing by 4 because of the 4 color channels
 		let width = Math.sqrt(pixels.length / 4)
 		let height = width
 
@@ -36,7 +37,7 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 
 		for (y = 0; y < height; y++) {
 			let posY = 1 - (y / (height - 1))
-			// Avoid Division by Zero
+			// Avoid Division by Zero / NaN
 			if (posY === 0)
 				posY = 0.00000001
 
@@ -81,15 +82,17 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 			posY = 1 - (y / (height - 1))
 			client.send('/avatar/parameters/PosY', posY)
 
-			pixelCounter += (width * 8)
+			// Shifting the pixelCounter by twice the width, and the R G B and A (2 * 4)
+			pixelCounter += ((width * 2) * 4)
 
+			// Check if the shift goes over / renderer is at the end of last line)
 			if (pixelCounter >= pixels.length) {
 				continue
 			}
 
 			for (let x = width - 1; x >= 0; x--) {
 				let posX = x / (width - 1)
-				// Avoid Division by Zero
+				// Avoid Division by Zero / NaN
 				if (posX === 0)
 					posX = 0.00000001
 
