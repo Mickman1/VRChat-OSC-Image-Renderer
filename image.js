@@ -11,7 +11,7 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 	console.log('OSC Server online')
 
 	PNG.decode(`./img/${args[0]}.png`, async function(pixels) {
-		let waitTimeMs = 20
+		let waitTimeMs = args[1]
 		let pixelCounter = 0
 
 		// pixels is a 1d array (in rgba order) of decoded pixel data
