@@ -28,6 +28,12 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 		client.send('/avatar/parameters/ColorB', 0.0)
 		client.send('/avatar/parameters/ColorA', 0.0)
 
+		// Don't send repeat colors over OSC
+		let previousColorR = 0.0
+		let previousColorG = 0.0
+		let previousColorB = 0.0
+		let previousColorA = 0.0
+
 		for (y = 0; y < height; y++) {
 			let posY = 1 - (y / (height - 1))
 			// Avoid Division by Zero
@@ -38,7 +44,7 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 
 			for (let x = 0; x < width; x++) {
 				let posX = x / (width - 1)
-				// Avoid Division by Zero
+				// Avoid Division by Zero / NaN
 				if (posX === 0)
 					posX = 0.00000001
 
@@ -48,10 +54,23 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 				let colorA = (pixels[pixelCounter + 3] / 255) + 0.0001
 				
 				client.send('/avatar/parameters/PosX', posX)
-				client.send('/avatar/parameters/ColorR', colorR)
-				client.send('/avatar/parameters/ColorG', colorG)
-				client.send('/avatar/parameters/ColorB', colorB)
-				//client.send('/avatar/parameters/ColorA', colorA)
+
+				if (colorR !== previousColorR) {
+					client.send('/avatar/parameters/ColorR', colorR)
+					previousColorR = colorR
+				}
+				if (colorG !== previousColorG) {
+					client.send('/avatar/parameters/ColorG', colorG)
+					previousColorG = colorG
+				}
+				if (colorB !== previousColorB) {
+					client.send('/avatar/parameters/ColorB', colorB)
+					previousColorB = colorB
+				}
+				if (colorA !== previousColorA) {
+					client.send('/avatar/parameters/ColorA', colorA)
+					previousColorA = colorA
+				}
 
 				await wait(waitTimeMs)
 
@@ -80,10 +99,23 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 				let colorA = (pixels[pixelCounter + 3] / 255) + 0.0001
 				
 				client.send('/avatar/parameters/PosX', posX)
-				client.send('/avatar/parameters/ColorR', colorR)
-				client.send('/avatar/parameters/ColorG', colorG)
-				client.send('/avatar/parameters/ColorB', colorB)
-				//client.send('/avatar/parameters/ColorA', colorA)
+
+				if (colorR !== previousColorR) {
+					client.send('/avatar/parameters/ColorR', colorR)
+					previousColorR = colorR
+				}
+				if (colorG !== previousColorG) {
+					client.send('/avatar/parameters/ColorG', colorG)
+					previousColorG = colorG
+				}
+				if (colorB !== previousColorB) {
+					client.send('/avatar/parameters/ColorB', colorB)
+					previousColorB = colorB
+				}
+				if (colorA !== previousColorA) {
+					client.send('/avatar/parameters/ColorA', colorA)
+					previousColorA = colorA
+				}
 				
 				await wait(waitTimeMs)
 
