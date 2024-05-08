@@ -69,7 +69,7 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 					previousColorB = colorB
 				}
 				if (colorA !== previousColorA) {
-					client.send('/avatar/parameters/ColorA', colorA)
+					//client.send('/avatar/parameters/ColorA', colorA)
 					previousColorA = colorA
 				}
 
@@ -78,17 +78,19 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 				pixelCounter += 4
 			}
 
-			y += 1
-			posY = 1 - (y / (height - 1))
-			client.send('/avatar/parameters/PosY', posY)
-
 			// Shifting the pixelCounter by twice the width, and the R G B and A (2 * 4)
 			pixelCounter += ((width * 2) * 4)
 
 			// Check if the shift goes over / renderer is at the end of last line)
 			if (pixelCounter >= pixels.length) {
+				console.log('OVER')
+				pixelCounter -= ((width * 2) * 4)
 				continue
 			}
+
+			y += 1
+			posY = 1 - (y / (height - 1))
+			client.send('/avatar/parameters/PosY', posY)
 
 			for (let x = width - 1; x >= 0; x--) {
 				let posX = x / (width - 1)
@@ -116,9 +118,10 @@ var oscServer = new Server(9001, '127.0.0.1', () => {
 					previousColorB = colorB
 				}
 				if (colorA !== previousColorA) {
-					client.send('/avatar/parameters/ColorA', colorA)
+					//client.send('/avatar/parameters/ColorA', colorA)
 					previousColorA = colorA
 				}
+
 				
 				await wait(waitTimeMs)
 
